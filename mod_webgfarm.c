@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014 Fuyumasa Takatsu
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -58,7 +58,7 @@ typedef struct {
 } webgfarm_config;
 
 static void *webgfarm_create_server_config(apr_pool_t *p, server_rec *s) {
-    webgfarm_config *wconfig = (webgfarm_config *) apr_pcalloc(p, sizeof (webgfarm_config));
+    webgfarm_config *wconfig = apr_pcalloc(p, sizeof (webgfarm_config));
     wconfig->enabled = 0;
     wconfig->read_redirect = 0;
     wconfig->write_redirect = 0;
@@ -145,7 +145,7 @@ static int util_read(request_rec *r, char **rbuf, apr_off_t *size) {
 }
 
 char *webgfarm_api_v1_getfilepath(request_rec *r) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(r->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(r->server->module_config, &webgfarm_module);
     return r->uri + wconfig->basepathlen - 1;
 }
 
@@ -157,7 +157,7 @@ int webgfarm_api_v1_read_file(request_rec *r) {
         return HTTP_FORBIDDEN;
     }
 
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(r->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(r->server->module_config, &webgfarm_module);
 
     gfarm_error_t gerr;
     GFS_File gfs_file;
@@ -365,7 +365,7 @@ int webgfarm_api_v1_write_to_file(request_rec *r) {
     GFS_File gfs_file;
 
 
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(r->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(r->server->module_config, &webgfarm_module);
     if (wconfig->write_redirect) {
 
         char *redirect_url = apr_palloc(r->pool, sizeof (char)*WEBGFARM_BUFFER_SIZE);
@@ -567,7 +567,7 @@ int webgfarm_api_v1(request_rec *r) {
 
 static int webgfarm_handler(request_rec *r) {
 
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(r->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(r->server->module_config, &webgfarm_module);
     if (!wconfig->enabled) {
         return DECLINED;
     }
@@ -611,31 +611,31 @@ static void webgfarm_register_hooks(apr_pool_t *p) {
 }
 
 static const char *webgfarm_set_enable(cmd_parms *cmd, void *dummy, int arg) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     wconfig->enabled = arg;
     return NULL;
 }
 
 static const char *webgfarm_set_redirect_ssl(cmd_parms *cmd, void *dummy, int arg) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     wconfig->ssl = arg;
     return NULL;
 }
 
 static const char *webgfarm_set_read_redirect(cmd_parms *cmd, void *dummy, int arg) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     wconfig->read_redirect = arg;
     return NULL;
 }
 
 static const char *webgfarm_set_write_redirect(cmd_parms *cmd, void *dummy, int arg) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     wconfig->write_redirect = arg;
     return NULL;
 }
 
 static const char *webgfarm_set_redirect_to(cmd_parms *cmd, void *sconf_, const char *arg_) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     char *hostname, *port;
     char *arg = malloc(sizeof (char) * WEBGFARM_BUFFER_SIZE);
     strncpy(arg, arg_, WEBGFARM_BUFFER_SIZE);
@@ -647,7 +647,7 @@ static const char *webgfarm_set_redirect_to(cmd_parms *cmd, void *sconf_, const 
 }
 
 static const char *webgfarm_set_localhostname(cmd_parms *cmd, void *dummy, const char *arg_) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     char *hostname, *port;
     char *arg = malloc(sizeof (char) * WEBGFARM_BUFFER_SIZE);
     strncpy(arg, arg_, WEBGFARM_BUFFER_SIZE);
@@ -661,7 +661,7 @@ static const char *webgfarm_set_localhostname(cmd_parms *cmd, void *dummy, const
 }
 
 static const char *webgfarm_set_basepath(cmd_parms *cmd, void *dummy, const char *arg) {
-    webgfarm_config *wconfig = (webgfarm_config *) ap_get_module_config(cmd->server->module_config, &webgfarm_module);
+    webgfarm_config *wconfig = ap_get_module_config(cmd->server->module_config, &webgfarm_module);
     wconfig->basepath = arg;
     wconfig->basepathlen = strlen(arg);
     return NULL;
